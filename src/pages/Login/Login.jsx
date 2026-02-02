@@ -1,11 +1,21 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, Lock, User, ArrowRight, Github, Twitter, Facebook } from 'lucide-react';
 
 const Login = () => {
+    const location = useLocation();
     const [isLogin, setIsLogin] = useState(true);
+    const [userType, setUserType] = useState(location.state?.role || 'buyer'); // 'buyer' or 'seller'
+
+    // Update userType if location state changes (e.g. clicking different nav link)
+    useEffect(() => {
+        if (location.state?.role) {
+            setUserType(location.state.role);
+        }
+    }, [location.state]);
+
     const [formData, setFormData] = useState({ username: '', email: '', password: '' });
     const { login } = useAuth();
     const navigate = useNavigate();
@@ -14,8 +24,12 @@ const Login = () => {
         e.preventDefault();
         // Simulate login delay for effect
         setTimeout(() => {
-            login({ name: formData.username || 'User', displayName: formData.username || 'User' });
-            navigate('/seller-dashboard');
+            login({
+                name: formData.username || 'User',
+                displayName: formData.username || 'User',
+                role: userType
+            });
+            navigate(userType === 'seller' ? '/seller-dashboard' : '/buyer-dashboard');
         }, 800);
     };
 
@@ -83,7 +97,7 @@ const Login = () => {
                         </p>
                     </div>
 
-                    {/* Switcher */}
+                    {/* Login/Signup Switcher */}
                     <div className="flex bg-white/5 p-1 rounded-lg mb-6">
                         <button
                             onClick={() => setIsLogin(true)}

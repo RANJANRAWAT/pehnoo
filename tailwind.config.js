@@ -7,8 +7,12 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#4F46E5", // Pehnoo
+        primary: "#4F46E5",
         accent: "#F59E0B",
+      },
+      fontFamily: {
+        sans: ['Outfit', 'sans-serif'],
+        outfit: ['Outfit', 'sans-serif'],
       },
       animation: {
         'pulse-slow': 'pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite',

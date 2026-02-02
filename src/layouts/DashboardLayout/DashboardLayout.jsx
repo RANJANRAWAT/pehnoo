@@ -4,7 +4,7 @@ import { LayoutDashboard, ShoppingBag, Package, Settings, LogOut, LifeBuoy } fro
 import { useAuth } from '../../context/AuthContext/AuthContext';
 
 const DashboardLayout = () => {
-    const { logout } = useAuth();
+    const { logout, user } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -21,7 +21,7 @@ const DashboardLayout = () => {
                     icon={<LayoutDashboard size={20} />}
                     text="Dashboard"
                     active={isActive('/seller-dashboard') || isActive('/buyer-dashboard')}
-                    onClick={() => navigate(location.pathname.includes('seller') ? '/seller-dashboard' : '/buyer-dashboard')}
+                    onClick={() => navigate(user?.role === 'seller' ? '/seller-dashboard' : '/buyer-dashboard')}
                 />
                 <SidebarItem
                     icon={<ShoppingBag size={20} />}
@@ -55,7 +55,7 @@ const DashboardLayout = () => {
                     onClick={logout}
                 />
             </Sidebar>
-            <div className="flex-1 overflow-y-auto p-4 md:p-8">
+            <div className="flex-1 overflow-y-auto p-4">
                 <Outlet />
             </div>
         </div>

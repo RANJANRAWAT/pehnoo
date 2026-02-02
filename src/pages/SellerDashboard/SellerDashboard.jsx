@@ -2,6 +2,10 @@ import { motion } from 'framer-motion';
 import { Search, Bell, Mail, ChevronDown, Users, Package, ShoppingBag, TrendingUp, MoreHorizontal } from 'lucide-react';
 
 const SellerDashboard = () => {
+    // Fallback Image Handler
+    const handleImageError = (e) => {
+        e.target.src = "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=300";
+    };
     // Mock Data based on reference
     const stats = [
         { label: "Total Customers", value: "2000+", icon: <Users size={20} className="text-purple-600" />, bg: "bg-purple-100" },
@@ -10,11 +14,19 @@ const SellerDashboard = () => {
         { label: "Total Sales", value: "2000+", icon: <TrendingUp size={20} className="text-emerald-600" />, bg: "bg-emerald-100" },
     ];
 
+    // Reliable Image URLs
+    const productImages = [
+        "https://images.unsplash.com/photo-1542272454315-4c01d7abdf4a?auto=format&fit=crop&q=80&w=50",
+        "https://images.unsplash.com/photo-1551028919-ac6635f0e5c9?auto=format&fit=crop&q=80&w=50",
+        "https://images.unsplash.com/photo-1620799140408-ed5341cd2431?auto=format&fit=crop&q=80&w=50",
+        "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&q=80&w=50"
+    ];
+
     const orders = [
-        { id: "#202394", product: "Jeans", img: "https://images.unsplash.com/photo-1542272454315-4c01d7abdf4a?auto=format&fit=crop&q=80&w=50", customer: "Ripon Ahmed", date: "1 Jan 24", price: "₹1200", status: "Completed" },
-        { id: "#202395", product: "Jacket", img: "https://images.unsplash.com/photo-1551028919-ac6635f0e5c9?auto=format&fit=crop&q=80&w=50", customer: "Darlene Robertson", date: "2 Jan 24", price: "₹1800", status: "Pending" },
-        { id: "#202396", product: "Sweater", img: "https://images.unsplash.com/photo-1620799140408-ed5341cd2431?auto=format&fit=crop&q=80&w=50", customer: "Leslie Alexander", date: "3 Jan 24", price: "₹500", status: "Completed" },
-        { id: "#202397", product: "T-Shirt", img: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&q=80&w=50", customer: "Ralph Edwards", date: "4 Jan 24", price: "₹1800", status: "Completed" },
+        { id: "#202394", product: "Jeans", img: productImages[0], customer: "Ripon Ahmed", date: "1 Jan 24", price: "₹1200", status: "Completed" },
+        { id: "#202395", product: "Jacket", img: productImages[1], customer: "Darlene Robertson", date: "2 Jan 24", price: "₹1800", status: "Pending" },
+        { id: "#202396", product: "Sweater", img: productImages[2], customer: "Leslie Alexander", date: "3 Jan 24", price: "₹500", status: "Completed" },
+        { id: "#202397", product: "T-Shirt", img: productImages[3], customer: "Ralph Edwards", date: "4 Jan 24", price: "₹1800", status: "Completed" },
     ];
 
     const topItems = [
@@ -55,6 +67,7 @@ const SellerDashboard = () => {
                         <div className="flex items-center gap-2 ml-2">
                             <img
                                 src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100"
+                                onError={handleImageError}
                                 alt="User"
                                 className="w-10 h-10 rounded-full object-cover"
                             />
@@ -192,7 +205,12 @@ const SellerDashboard = () => {
                                 {orders.map((order, i) => (
                                     <tr key={i} className="border-b border-gray-50 last:border-none">
                                         <td className="py-3 pr-2">
-                                            <img src={order.img} alt="" className="w-8 h-8 rounded-lg object-cover" />
+                                            <img
+                                                src={order.img}
+                                                onError={handleImageError}
+                                                alt=""
+                                                className="w-8 h-8 rounded-lg object-cover"
+                                            />
                                         </td>
                                         <td className="py-3 text-gray-500">{order.id}</td>
                                         <td className="py-3 font-medium">{order.customer}</td>

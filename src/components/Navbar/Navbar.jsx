@@ -1,22 +1,29 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext/AuthContext';
+import { useCart } from '../../context/CartContext/CartContext';
 import { useState } from 'react';
 import { Search, ShoppingBag, Menu, X, User } from 'lucide-react';
 
 const Navbar = () => {
     const { user, logout } = useAuth();
+    const { cartItems } = useCart();
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
 
-    const isActive = (path) => location.pathname === path;
+    const isActive = (path) => {
+        if (location.pathname === path) return true;
+        if (location.pathname === '/login' && path === '/seller-dashboard' && location.state?.role === 'seller') return true;
+        if (location.pathname === '/login' && path === '/buyer-dashboard' && (location.state?.role === 'buyer' || !location.state?.role)) return true; // Default to buyer if no role
+        return false;
+    };
 
     const navLinkClass = (path) => `
-        relative px-1 py-2 text-sm font-medium transition-all duration-300
+        relative px-4 py-2 text-sm font-medium transition-all duration-300 rounded-full
         ${isActive(path) ? 'text-white' : 'text-gray-400 hover:text-white'}
     `;
 
     const activeIndicator = (path) => isActive(path) && (
-        <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full shadow-[0_0_10px_rgba(99,102,241,0.8)]"></span>
+        <span className="absolute inset-0 bg-white/10 rounded-full -z-10 border border-white/5"></span>
     );
 
     return (
@@ -38,11 +45,19 @@ const Navbar = () => {
                         Home
                         {activeIndicator('/')}
                     </Link>
-                    <Link to="/seller-dashboard" className={navLinkClass('/seller-dashboard')}>
+                    <Link
+                        to={user ? "/seller-dashboard" : "/login"}
+                        state={{ role: 'seller' }}
+                        className={navLinkClass('/seller-dashboard')}
+                    >
                         Seller
                         {activeIndicator('/seller-dashboard')}
                     </Link>
-                    <Link to="/buyer-dashboard" className={navLinkClass('/buyer-dashboard')}>
+                    <Link
+                        to={user ? "/buyer-dashboard" : "/login"}
+                        state={{ role: 'buyer' }}
+                        className={navLinkClass('/buyer-dashboard')}
+                    >
                         Buyer
                         {activeIndicator('/buyer-dashboard')}
                     </Link>
@@ -59,9 +74,14 @@ const Navbar = () => {
                         />
                     </div>
 
-                    <button className="p-2 text-gray-400 hover:text-white transition-colors">
+                    <Link to="/cart" className="relative p-2 text-gray-400 hover:text-white transition-colors">
                         <ShoppingBag size={20} />
-                    </button>
+                        {cartItems.length > 0 && (
+                            <span className="absolute top-0 right-0 w-4 h-4 bg-purple-600 text-white text-[10px] font-bold flex items-center justify-center rounded-full shadow-lg shadow-purple-500/50">
+                                {cartItems.length}
+                            </span>
+                        )}
+                    </Link>
 
                     {user ? (
                         <div className="flex items-center gap-3 pl-4 border-l border-white/10">
